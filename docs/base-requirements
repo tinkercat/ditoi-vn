@@ -1,0 +1,18 @@
+I recently used AI to build a custom Link-in-Bio web app for my restaurant. I have the raw code (a single HTML/CSS/JS file), but I need to get it live on a domain I just bought.
+
+The AI gave me instructions on how to host it and set up a backend, but honestly, that part is way over my head...I just want a live customer view and a working admin site to update stuff and debug in the future.
+
+Here is the current state of the code:
+Right now, it's a split-screen mockup. The left side is an "Admin UI" and the right side is a "Customer Phone Preview".
+
+What I need Chewy help with:
+Split the Frontend & Backend: Separate the code into a live customer-facing Link-in-Bio page and a secure, login-protected Admin portal.
+Database Setup: Connect it to a real database (like Firebase, Supabase, or whatever you recommend) so changes in the Admin portal actually save and update the live customer view.
+Hosting & Domain: Deploy it and connect it to the domain I already purchased.
+
+Here is exactly what the app currently does (Features to implement):
+Dynamic Links & Info: The Admin can update the Google Maps link, Menu link, and Hotline number. The customer view features a working click-to-call button and external link routing.
+Customizable Promos: The Admin can edit text for a main Slogan and update promotional badges (e.g., "10% off for FB follow", "Free drink for Google Review").
+Media & Branding Uploads: The Admin UI has file uploaders to change the Background Image, the Logo (PNG with CSS glow effects), and even upload custom Brand Fonts (.otf, .ttf).
+Integrated AI Feature: The customer view has a "Trải nghiệm AI" (AI Experience) section. It connects to the Google Gemini API to either recommend dishes (reading from the menu link) or generate random, funny drinking slogans for the customers.
+Responsive UI: The customer view is designed like a Linktree/Beacons.ai mobile page but with custom animations (noise texture overlay, gradient blurs, pulsing glow effects).

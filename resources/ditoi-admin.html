@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DÍ TỚI - Quản Trị & Link-in-Bio</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,700;1,400&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        /* Font dự phòng mặc định */
+        @font-face {
+            font-family: 'FallbackFont';
+            src: local('iCiel BC Cubano'), local('Bebas Neue'), sans-serif;
+        }
+
+        :root {
+            --bg-color: #181000;
+            --surface-color: #1f1200;
+            --accent-gold: #EBB020;
+            --accent-red: #CC261B;
+            --text-cream: #FEEDD6;
+            --glow-gold: rgba(235, 176, 32, 0.6);
+            
+            /* Phân cấp Font */
+            --font-heading: 'Bebas Neue', 'FallbackFont', sans-serif;
+            --font-body: 'Barlow', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0c0800;
+            color: var(--text-cream);
+            font-family: var(--font-body);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* --- LAYOUT CHIA ĐÔI --- */
+        .admin-side {
+            width: 35%;
+            height: 100%;
+            background: #231800;
+            border-right: 2px solid var(--accent-gold);
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .preview-side {
+            width: 65%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #110b00;
+            position: relative;
+        }
+
+        /* --- ADMIN UI --- */
+        .admin-title { font-family: 'Bebas Neue', sans-serif; color: var(--accent-gold); font-size: 1.6rem; border-bottom: 2px solid var(--accent-gold); padding-bottom: 8px; margin-bottom: 5px; text-transform: uppercase; }
+        .admin-group { display: flex; flex-direction: column; gap: 6px; }
+        .admin-group label { color: var(--accent-gold); font-weight: bold; font-size: 0.75rem; text-transform: uppercase; }
+        .admin-group input { background: #110b00; border: 1px solid #443300; color: #fff; padding: 10px; border-radius: 4px; font-family: var(--font-body); width: 100%; }
+        .file-input-wrapper { background: #332200; border: 1px dashed var(--accent-gold); padding: 12px; text-align: center; cursor: pointer; border-radius: 4px; font-size: 0.8rem; display: block; margin-top: 5px; }
+
+        /* --- PHONE MOCKUP --- */
+        .phone-mockup {
+            width: 375px;
+            height: 90%;
+            background: var(--bg-color);
+            border: 12px solid #222;
+            border-radius: 40px;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 0 60px rgba(0,0,0,1);
+        }
+        .phone-mockup::-webkit-scrollbar { display: none; }
+
+        /* --- CUSTOMER CONTENT --- */
+        .customer-container {
+            width: 100%;
+            min-height: 100%;
+            position: relative;
+            background-color: var(--bg-color);
+            padding-bottom: 40px;
+            z-index: 1;
+        }
+
+        .customer-container::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.08; z-index: 10; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .hero {
+            position: relative;
+            height: 250px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            overflow: hidden;
+            gap: 8px;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: linear-gradient(to bottom, rgba(24, 16, 0, 0) 0%, rgba(24, 16, 0, 0.4) 50%, rgba(24, 16, 0, 1) 100%),
+                              url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=1000&auto=format&fit=crop');
+            background-position: center;
+            background-size: cover;
+            filter: blur(4px);
+            transform: scale(1.05);
+            z-index: 1;
+        }
+
+        @keyframes pulse-glow {
+            from { filter: drop-shadow(0 0 10px var(--glow-gold)); }
+            to { filter: drop-shadow(0 0 25px var(--glow-gold)) drop-shadow(0 0 5px #fff); }
+        }
+
+        .logo-img {
+            max-width: 220px;
+            max-height: 130px;
+            object-fit: contain;
+            z-index: 5;
+            display: none;
+            animation: pulse-glow 2s infinite alternate ease-in-out;
+        }
+
+        .slogan-badge {
+            background-color: var(--accent-red);
+            color: var(--text-cream);
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            padding: 8px 20px;
+            transform: rotate(-1deg);
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255,255,255,0.2);
+            text-transform: uppercase;
+            z-index: 5;
+            margin-top: -5px;
+        }
+
+        .hero-sub {
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            color: var(--text-cream);
+            z-index: 5;
+            opacity: 0.9;
+            letter-spacing: 1.5px;
+        }
+
+        /* --- INFO BAR --- */
+        .info-grid { padding: 5px 20px; display: flex; flex-direction: column; gap: 6px; }
+        .info-card {
+            background-color: rgba(31, 18, 0, 0.6);
+            border: 1px solid rgba(235, 176, 32, 0.2);
+            padding: 12px 15px; border-radius: 4px; display: flex; align-items: center; gap: 15px;
+            text-decoration: none; color: inherit;
+            transition: background 0.2s;
+        }
+        .info-card:hover { background: rgba(235, 176, 32, 0.1); }
+        .info-icon { font-size: 1.3rem; }
+        .info-content { display: flex; flex-direction: column; width: 100%; }
+        .info-label { font-family: var(--font-body); font-size: 0.7rem; color: var(--accent-gold); text-transform: uppercase; font-weight: bold; }
+        .info-value { font-family: var(--font-heading); font-size: 1rem; color: var(--text-cream); text-transform: uppercase; margin-top: 2px; }
+
+        /* --- DIVIDERS --- */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 20px 20px 10px 20px;
+            gap: 15px;
+        }
+        .section-divider::before, .section-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(235, 176, 32, 0.3);
+        }
+        .section-divider span {
+            font-family: var(--font-heading);
+            font-size: 0.8rem;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            white-space: nowrap;
+        }
+
+        /* --- LINKS --- */
+        .links-container { padding: 0 20px; display: flex; flex-direction: column; gap: 10px; }
+        
+        .action-btn {
+            background-color: var(--surface-color); border: 1px solid var(--accent-gold);
+            color: var(--text-cream); text-decoration: none; padding: 18px 20px; border-radius: 4px;
+            display: flex; align-items: center; 
+            transition: 0.2s; cursor: pointer;
+            width: 100%;
+        }
+        
+        .btn-center { justify-content: center; font-family: var(--font-heading); text-transform: uppercase; letter-spacing: 1px; font-size: 1rem; }
+        .btn-between { justify-content: space-between; }
+        .btn-main-text { display: flex; align-items: center; gap: 12px; font-family: var(--font-body); font-weight: 700; font-size: 1rem; }
+        
+        .badge-offer {
+            background-color: var(--accent-red);
+            color: #fff !important; 
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            font-weight: bold;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+            text-transform: uppercase;
+        }
+
+        .action-btn:active { background: #2d1b00; transform: scale(0.98); }
+
+        .ai-btn { border: 2px double var(--accent-gold); font-family: var(--font-heading); justify-content: center; text-transform: uppercase; letter-spacing: 1px; width: 100%; margin-top: 5px; }
+
+        /* --- VOUCHER --- */
+        .voucher-box {
+            margin: 30px 20px; padding: 30px; border: 2px dashed var(--accent-gold);
+            text-align: center; border-radius: 4px; background: rgba(235, 176, 32, 0.05);
+        }
+        .voucher-title { font-family: var(--font-heading); font-size: 1rem; color: var(--accent-gold); margin-bottom: 10px; }
+        .voucher-code {
+            font-family: var(--font-heading); font-size: 3rem; color: var(--accent-gold);
+            display: block; margin: 5px 0; background: rgba(0,0,0,0.5); padding: 5px;
+            letter-spacing: 5px;
+        }
+
+        /* --- AI MODAL --- */
+        #ai-modal {
+            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); z-index: 100; padding: 30px; justify-content: center; align-items: center;
+        }
+        .modal-content { background: var(--surface-color); border: 2px solid var(--accent-gold); width: 100%; padding: 25px; box-shadow: 0 0 30px var(--glow-gold); }
+        .modal-header { font-family: var(--font-heading); color: var(--accent-gold); border-bottom: 2px solid var(--accent-gold); margin-bottom: 15px; font-size: 1.6rem; }
+        .modal-body { font-size: 0.9rem; line-height: 1.5; color: var(--text-cream); }
+        .modal-close { background: var(--accent-red); color: #fff; border: none; padding: 12px; width: 100%; font-family: var(--font-heading); margin-top: 15px; cursor: pointer; }
+
+        @media (max-width: 1100px) {
+            body { flex-direction: column; overflow-y: auto; height: auto; }
+            .admin-side, .preview-side { width: 100%; height: auto; padding: 20px; }
+            .phone-mockup { width: 100%; max-width: 375px; height: 700px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MÀN HÌNH QUẢN TRỊ (BÊN TRÁI) -->
+    <div class="admin-side">
+        <h2 class="admin-title">Quản Trị Dí Tới</h2>
+        
+        <div class="admin-group">
+            <label>1. Thiết lập Link:</label>
+            <input type="text" id="map-url-input" placeholder="Link Google Maps..." value="https://maps.app.goo.gl/UjS1d73B7dVM6FyH9">
+            <input type="text" id="hotline-val-input" placeholder="Số Hotline..." value="0979838250">
+            <input type="text" id="menu-url-input" placeholder="Link Menu/Ảnh thực đơn..." value="https://example.com/menu">
+        </div>
+
+        <div class="admin-group">
+            <label>2. Chữ Khung Đỏ (Slogan):</label>
+            <input type="text" id="slogan-input" value="ĐÃ 'DÍ' LÀ PHẢI 'TỚI'">
+        </div>
+
+        <div class="admin-group">
+            <label>3. Quản lý Ưu đãi (Badge Đỏ):</label>
+            <input type="text" id="fb-offer-input" placeholder="Facebook..." value="GIẢM 10%">
+            <input type="text" id="tt-offer-input" placeholder="TikTok..." value="TẶNG 1 MÓN">
+            <input type="text" id="ci-offer-input" placeholder="Check-in..." value="GIẢM 5%">
+            <input type="text" id="rv-offer-input" placeholder="Đánh giá Google..." value="TẶNG NƯỚC">
+        </div>
+
+        <div class="admin-group">
+            <label>4. Thương hiệu & Font:</label>
+            <label for="font-upload" class="file-input-wrapper">Tải Font thương hiệu (.otf, .ttf)</label>
+            <input type="file" id="font-upload" accept=".otf,.ttf" style="display:none">
+            
+            <label for="logo-upload" class="file-input-wrapper">Tải Logo PNG (Nền trong suốt)</label>
+            <input type="file" id="logo-upload" accept="image/png" style="display:none">
+        </div>
+
+        <div class="admin-group">
+            <label>5. Đổi ảnh không gian:</label>
+            <label for="bg-upload" class="file-input-wrapper">Chọn ảnh nền quán</label>
+            <input type="file" id="bg-upload" accept="image/*" style="display:none">
+        </div>
+    </div>
+
+    <!-- MÀN HÌNH KHÁCH HÀNG (BÊN PHẢI) -->
+    <div class="preview-side">
+        <div class="phone-mockup">
+            <div class="customer-container">
+                <!-- Header -->
+                <header class="hero">
+                    <div class="hero-bg" id="hero-bg-layer"></div>
+                    <img id="logo-img" class="logo-img" src="" alt="Dí Tới">
+                    <div id="slogan-badge" class="slogan-badge">ĐÃ "DÍ" LÀ PHẢI "TỚI"</div>
+                    <div class="hero-sub">NHẬU CHẤT – MỒI NGON</div>
+                </header>
+
+                <!-- Info Bar -->
+                <section class="info-grid">
+                    <a href="https://maps.app.goo.gl/UjS1d73B7dVM6FyH9" target="_blank" id="map-link-display" class="info-card">
+                        <span class="info-icon">📍</span>
+                        <div class="info-content">
+                            <span class="info-label">Địa chỉ</span>
+                            <span class="info-value">1A Tam Đảo, P. Hoà Hưng, Q.10, HCM</span>
+                        </div>
+                    </a>
+                    <div class="info-card">
+                        <span class="info-icon">🕒</span>
+                        <div class="info-content">
+                            <span class="info-label">Giờ mở cửa</span>
+                            <span class="info-value">16:00 – 02:00 Mỗi ngày</span>
+                        </div>
+                    </div>
+                    <a href="javascript:void(0)" onclick="handleCall(event)" id="hotline-link-display" class="info-card">
+                        <span class="info-icon">📞</span>
+                        <div class="info-content">
+                            <span class="info-label">Hotline đặt bàn</span>
+                            <span id="display-hotline" class="info-value">0979838250</span>
+                        </div>
+                    </a>
+                </section>
+
+                <!-- Section: MENU -->
+                <div class="section-divider"><span>THỰC ĐƠN DÍ TỚI</span></div>
+                <nav class="links-container">
+                    <a href="https://example.com/menu" target="_blank" id="menu-link-btn" class="action-btn btn-center" style="background-color: var(--accent-red); border-color: var(--accent-red); color: #fff;">
+                        📖 XEM MENU DÍ TỚI TẠI ĐÂY
+                    </a>
+                </nav>
+
+                <!-- Section: ĐẶT BÀN -->
+                <div class="section-divider"><span>ĐẶT BÀN & LIÊN HỆ</span></div>
+                <nav class="links-container">
+                    <a href="javascript:void(0)" onclick="window.open('https://facebook.com/profile.php?id=61567342402429','_blank')" class="action-btn btn-center">🍺 Đặt bàn qua Facebook</a>
+                    <a href="javascript:void(0)" onclick="window.open('https://zalo.me/0979838250','_blank')" class="action-btn btn-center">💬 Đặt bàn qua Zalo</a>
+                    <a href="javascript:void(0)" onclick="handleCall(event)" class="action-btn btn-center">📞 Gọi Hotline ngay</a>
+                </nav>
+
+                <!-- Section: FOLLOW -->
+                <div class="section-divider"><span>FOLLOW & CHECK-IN NHẬN ƯU ĐÃI</span></div>
+                <nav class="links-container">
+                    <a href="javascript:void(0)" onclick="window.open('https://facebook.com/profile.php?id=61567342402429','_blank')" class="action-btn btn-between">
+                        <div class="btn-main-text">👍 Follow Facebook</div>
+                        <span id="fb-badge" class="badge-offer">GIẢM 10%</span>
+                    </a>
+                    <a href="javascript:void(0)" onclick="window.open('https://tiktok.com/@hy.dit.ngn.t','_blank')" class="action-btn btn-between">
+                        <div class="btn-main-text">🎬 Follow TikTok</div>
+                        <span id="tt-badge" class="badge-offer">TẶNG 1 MÓN</span>
+                    </a>
+                    <a href="javascript:void(0)" class="action-btn btn-between">
+                        <div class="btn-main-text">📍 Check-in tại quán</div>
+                        <span id="ci-badge" class="badge-offer">GIẢM 5%</span>
+                    </a>
+                    <a href="javascript:void(0)" class="action-btn btn-between">
+                        <div class="btn-main-text">⭐ Đánh giá Google</div>
+                        <span id="rv-badge" class="badge-offer">TẶNG NƯỚC</span>
+                    </a>
+                </nav>
+
+                <!-- AI Section -->
+                <div class="section-divider"><span>TRẢI NGHIỆM AI</span></div>
+                <div class="links-container">
+                    <button onclick="askGemini('recommend')" class="action-btn ai-btn">🍖 TƯ VẤN MỒI NGON</button>
+                    <button onclick="askGemini('toast')" class="action-btn ai-btn">📣 HÔ KHẨU HIỆU NHẬU</button>
+                </div>
+
+                <!-- Voucher -->
+                <section class="voucher-box">
+                    <div class="voucher-title">🎁 VOUCHER KHAI TRƯƠNG</div>
+                    <code class="voucher-code">DITOI27</code>
+                    <p style="font-family: var(--font-body); font-size: 0.75rem; font-style: italic; opacity: 0.7; margin-top:10px;">Vui lòng xuất trình trước khi thanh toán</p>
+                </section>
+
+                <footer style="padding: 20px; text-align: center;">
+                    <p style="font-family: var(--font-heading); font-size: 0.8rem; color: var(--accent-gold); opacity: 0.5;">Dí Tới · Q.10 · Sài Gòn</p>
+                </footer>
+
+                <!-- AI Modal -->
+                <div id="ai-modal">
+                    <div class="modal-content">
+                        <div id="modal-header" class="modal-header">ĐANG HỎI AI...</div>
+                        <div id="modal-body" class="modal-body"></div>
+                        <button onclick="closeModal()" class="modal-close">XONG RỒI - DÔ!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const apiKey = ""; // Sẽ được hệ thống cung cấp
+
+        // --- XỬ LÝ GỌI HOTLINE ---
+        function handleCall(e) {
+            e.preventDefault();
+            const phone = document.getElementById('hotline-val-input').value.replace(/\s/g, '');
+            if (phone) {
+                window.location.href = `tel:${phone}`;
+            }
+        }
+
+        // --- ADMIN SYNC LOGIC ---
+        
+        // Map URL sync
+        document.getElementById('map-url-input').addEventListener('input', function() {
+            document.getElementById('map-link-display').href = this.value;
+        });
+
+        // Hotline sync
+        document.getElementById('hotline-val-input').addEventListener('input', function() {
+            document.getElementById('display-hotline').innerText = this.value;
+        });
+
+        // Menu URL sync
+        document.getElementById('menu-url-input').addEventListener('input', function() {
+            document.getElementById('menu-link-btn').href = this.value || 'javascript:void(0)';
+        });
+
+        // Slogan sync
+        document.getElementById('slogan-input').addEventListener('input', function() {
+            document.getElementById('slogan-badge').innerText = this.value;
+        });
+
+        // Font Upload
+        document.getElementById('font-upload').addEventListener('change', async function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async function(event) {
+                    try {
+                        const fontFace = new FontFace('CustomBrandFont', event.target.result);
+                        await fontFace.load();
+                        document.fonts.add(fontFace);
+                        document.documentElement.style.setProperty('--font-heading', '"CustomBrandFont", "FallbackFont", sans-serif');
+                    } catch (err) { console.error("Lỗi tải font"); }
+                };
+                reader.readAsArrayBuffer(file);
+            }
+        });
+
+        // Logo Upload
+        document.getElementById('logo-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.getElementById('logo-img');
+                    img.src = event.target.result;
+                    img.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // BG Upload
+        document.getElementById('bg-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('hero-bg-layer').style.backgroundImage = 
+                        `linear-gradient(to bottom, rgba(24, 16, 0, 0) 0%, rgba(24, 16, 0, 0.4) 50%, rgba(24, 16, 0, 1) 100%), url('${event.target.result}')`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Offer Badges sync
+        const badgeMap = {
+            'fb-offer-input': 'fb-badge',
+            'tt-offer-input': 'tt-badge',
+            'ci-offer-input': 'ci-badge',
+            'rv-offer-input': 'rv-badge'
+        };
+        Object.keys(badgeMap).forEach(id => {
+            document.getElementById(id).addEventListener('input', function() {
+                document.getElementById(badgeMap[id]).innerText = this.value;
+            });
+        });
+
+        // --- AI LOGIC (Exponential Backoff) ---
+        async function fetchWithRetry(url, options, retries = 5, delay = 1000) {
+            try {
+                const res = await fetch(url, options);
+                if (!res.ok) throw new Error();
+                return res;
+            } catch (err) {
+                if (retries > 0) {
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return fetchWithRetry(url, options, retries - 1, delay * 2);
+                }
+                throw err;
+            }
+        }
+
+        async function askGemini(type) {
+            const modal = document.getElementById('ai-modal');
+            const body = document.getElementById('modal-body');
+            const header = document.getElementById('modal-header');
+            
+            modal.style.display = 'flex';
+            body.innerText = "Chờ quán lên mồi tí...";
+            header.innerText = "ĐANG HỎI AI...";
+
+            const menuLink = document.getElementById('menu-url-input').value || "Thực đơn quán";
+
+            const systemPrompt = type === 'recommend' 
+                ? `Bạn là một phục vụ chuyên nghiệp tại quán nhậu 'Dí Tới' ở Sài Gòn. Hệ thống thực đơn đang liên kết tại: ${menuLink}. Hãy tư vấn 3 món mồi 'bén' nhất hiện có (hoặc tự đề xuất món nhậu phổ biến), sau đó dặn khách click vào nút "XEM MENU DÍ TỚI TẠI ĐÂY" để chọn món. Đặc biệt chú ý: Trình bày như một đoạn trò chuyện bình thường, xuống dòng rõ ràng, tuyệt đối KHÔNG sử dụng các ký hiệu markdown như *, #, hay dấu gạch ngang đầu dòng.` 
+                : "Bạn là một 'trùm nhậu' có tiếng. Hãy sáng tạo ngẫu nhiên ĐÚNG 1 câu hô nhậu (kiểu 1-2-3 Dô) hoặc 1 câu slogan hài hước, cực gắt dành cho dân nhậu tại quán 'Dí Tới'. Mỗi lần CHỈ cung cấp 1 câu duy nhất, ngắn gọn. Đặc biệt chú ý: Tuyệt đối KHÔNG sử dụng các ký hiệu markdown như *, #, hay in đậm.";
+
+            try {
+                const res = await fetchWithRetry(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: "Hãy trả lời khách hàng ngay!" }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] }
+                    })
+                });
+                
+                const data = await res.json();
+                const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                header.innerText = type === 'recommend' ? "MỒI BÉN ĐỀ XUẤT" : "KHẨU HIỆU DÔ";
+                body.innerText = text || "Lỗi rồi, dứt ly khác đi!";
+            } catch (e) {
+                body.innerText = "Mạng lag rồi, anh em cứ dập trước đi!";
+            }
+        }
+
+        function closeModal() { document.getElementById('ai-modal').style.display = 'none'; }
+    </script>
+</body>
+</html>
