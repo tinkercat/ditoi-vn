@@ -1,0 +1,187 @@
+:root {
+  --bg-color: #181000;
+  --surface-color: #1f1200;
+  --accent-gold: #EBB020;
+  --accent-red: #CC261B;
+  --text-cream: #FEEDD6;
+  --font-heading: 'Bebas Neue', 'FallbackFont', sans-serif;
+  --font-body: 'Barlow', sans-serif;
+}
+
+/* ── LAYOUT ────────────────────────────────────────────────────── */
+.admin-wrapper {
+  min-height: 100vh;
+  background-color: #0c0800;
+  color: var(--text-cream);
+  font-family: var(--font-body);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 20px;
+}
+
+.admin-panel {
+  width: 100%;
+  max-width: 620px;
+  background: #231800;
+  border: 1px solid var(--accent-gold);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── HEADER ────────────────────────────────────────────────────── */
+.admin-title {
+  font-family: var(--font-heading);
+  color: var(--accent-gold);
+  font-size: 1.8rem;
+  border-bottom: 2px solid var(--accent-gold);
+  padding-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.admin-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ── FORM GROUPS ───────────────────────────────────────────────── */
+.admin-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-group label {
+  color: var(--accent-gold);
+  font-weight: bold;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.admin-group input {
+  background: #110b00;
+  border: 1px solid #443300;
+  color: #fff;
+  padding: 10px;
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  width: 100%;
+}
+
+.admin-group input:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+}
+
+.section-label {
+  font-family: var(--font-heading);
+  color: var(--accent-gold);
+  font-size: 1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  border-left: 3px solid var(--accent-gold);
+  padding-left: 10px;
+  margin-top: 8px;
+}
+
+/* ── BUTTONS ───────────────────────────────────────────────────── */
+.save-btn {
+  background: var(--accent-gold);
+  color: #0c0800;
+  border: none;
+  padding: 16px;
+  width: 100%;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: filter 0.2s;
+  margin-top: 10px;
+}
+
+.save-btn:hover:not(:disabled) { filter: brightness(1.1); }
+.save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.save-btn.saving { background: #665010; color: #fff; }
+.save-btn.saved  { background: #1a5c1a; color: #fff; }
+.save-btn.error  { background: var(--accent-red); color: #fff; }
+
+.signout-btn {
+  background: transparent;
+  border: 1px solid var(--accent-red);
+  color: var(--accent-red);
+  padding: 6px 14px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.signout-btn:hover { background: var(--accent-red); color: #fff; }
+
+.login-btn {
+  background: var(--accent-gold);
+  color: #0c0800;
+  border: none;
+  padding: 14px;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.login-btn:hover { filter: brightness(1.1); }
+.login-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── MESSAGES ──────────────────────────────────────────────────── */
+.error-msg {
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  background: rgba(255, 0, 0, 0.1);
+  border-radius: 4px;
+  border-left: 3px solid var(--accent-red);
+}
+
+.status-msg {
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  background: rgba(235, 176, 32, 0.08);
+  border-radius: 4px;
+  color: var(--accent-gold);
+  text-align: center;
+}
+
+/* ── FILE UPLOADER ─────────────────────────────────────────────── */
+.file-input-wrapper {
+  background: #332200;
+  border: 1px dashed var(--accent-gold);
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  display: block;
+  color: var(--text-cream);
+  transition: background 0.2s;
+}
+
+.file-input-wrapper:hover { background: #442900; }
+
+.file-status {
+  font-size: 0.75rem;
+  color: var(--accent-gold);
+  opacity: 0.85;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}

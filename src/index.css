@@ -1,0 +1,14 @@
+@font-face {
+  font-family: 'FallbackFont';
+  src: local('iCiel BC Cubano'), local('Bebas Neue'), sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #0c0800;
+}
