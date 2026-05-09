@@ -1,6 +1,9 @@
 @font-face {
-  font-family: 'FallbackFont';
-  src: local('iCiel BC Cubano'), local('Bebas Neue'), sans-serif;
+  font-family: 'iCiel BC Cubano';
+  src: url('/fonts/iCielBCCubano-Normal.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 * {
