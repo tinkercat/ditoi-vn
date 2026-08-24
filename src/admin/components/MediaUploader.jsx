@@ -43,13 +43,25 @@ export default function MediaUploader({ label, accept, currentUrl, onUploaded })
   return (
     <div className="admin-group">
       <label>{label}</label>
-      <label htmlFor={inputId} className="file-input-wrapper">
-        {uploading
-          ? 'Đang tải lên...'
-          : currentUrl
-          ? '✓ Đã có file — Click để thay đổi'
-          : 'Click để chọn file'}
-      </label>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <label htmlFor={inputId} className="file-input-wrapper" style={{ flex: 1, margin: 0 }}>
+          {uploading
+            ? 'Đang tải lên...'
+            : currentUrl
+            ? '✓ Đã có file — Click để thay đổi'
+            : 'Click để chọn file'}
+        </label>
+        {currentUrl && (
+          <button
+            type="button"
+            onClick={() => { onUploaded(''); setStatus('') }}
+            title="Xoá file này"
+            style={{ padding: '6px 10px', background: 'none', border: '1px solid #c0392b', color: '#c0392b', borderRadius: 4, cursor: 'pointer', flexShrink: 0, fontSize: '0.85rem' }}
+          >
+            ✕
+          </button>
+        )}
+      </div>
       <input
         type="file"
         id={inputId}
