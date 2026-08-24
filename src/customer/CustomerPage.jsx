@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import './customer.css'
 import HeroSection from './components/HeroSection'
 import InfoGrid from './components/InfoGrid'
+import MenuGallery from './components/MenuGallery'
 import LinksSection from './components/LinksSection'
 import AiSection from './components/AiSection'
 import VoucherSection from './components/VoucherSection'
@@ -69,6 +70,7 @@ export default function CustomerPage() {
         onBookingOpen={() => setBookingOpen(true)}
       />
       <InfoGrid mapsLink={config.maps_link} hotline={config.hotline} />
+      <MenuGallery coverUrl={config.menu_cover_url} drinksUrl={config.menu_drinks_url} />
       <LinksSection menuLink={config.menu_link} promoBadges={promoBadges} />
       <AiSection />
       <VoucherSection />
