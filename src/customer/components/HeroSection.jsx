@@ -1,7 +1,7 @@
 const FALLBACK_BG = '/images/background.jpg'
 const FALLBACK_LOGO = '/images/logo.png'
 
-export default function HeroSection({ backgroundImageUrl, logoUrl, slogan }) {
+export default function HeroSection({ backgroundImageUrl, logoUrl, slogan, onBookingOpen }) {
   const bgImage = backgroundImageUrl || FALLBACK_BG
   const logo = logoUrl || FALLBACK_LOGO
   const heroBgStyle = {
@@ -16,6 +16,7 @@ export default function HeroSection({ backgroundImageUrl, logoUrl, slogan }) {
       <img className="logo-img" src={logo} alt="Dí Tới logo" />
       <div className="slogan-badge">{slogan || "ĐÃ 'DÍ' LÀ PHẢI 'TỚI'"}</div>
       <div className="hero-sub">NHẬU CHẤT – MỒI NGON</div>
+      <button className="hero-book-btn" onClick={onBookingOpen}>🍺 ĐẶT BÀN NGAY</button>
     </header>
   )
 }

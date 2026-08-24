@@ -5,6 +5,7 @@ import InfoGrid from './components/InfoGrid'
 import LinksSection from './components/LinksSection'
 import AiSection from './components/AiSection'
 import VoucherSection from './components/VoucherSection'
+import BookingModal from './components/BookingModal'
 
 const DEFAULT_CONFIG = {
   maps_link: 'https://maps.app.goo.gl/UjS1d73B7dVM6FyH9',
@@ -18,10 +19,14 @@ const DEFAULT_CONFIG = {
   background_image_url: '',
   logo_url: '',
   brand_font_url: '',
+  branch_name: '1A Tam Đảo, P. Hoà Hưng, Q.10, HCM',
+  menu_cover_url: '',
+  menu_drinks_url: '',
 }
 
 export default function CustomerPage() {
   const [config, setConfig] = useState(DEFAULT_CONFIG)
+  const [bookingOpen, setBookingOpen] = useState(false)
 
   useEffect(() => {
     fetch('/api/public-config')
@@ -50,10 +55,18 @@ export default function CustomerPage() {
 
   return (
     <div className="customer-container">
+      {bookingOpen && (
+        <BookingModal
+          onClose={() => setBookingOpen(false)}
+          hotline={config.hotline}
+          branchName={config.branch_name}
+        />
+      )}
       <HeroSection
         backgroundImageUrl={config.background_image_url}
         logoUrl={config.logo_url}
         slogan={config.slogan}
+        onBookingOpen={() => setBookingOpen(true)}
       />
       <InfoGrid mapsLink={config.maps_link} hotline={config.hotline} />
       <LinksSection menuLink={config.menu_link} promoBadges={promoBadges} />
