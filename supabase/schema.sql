@@ -32,6 +32,23 @@ insert into site_config (key, value) values
   ('menu_drinks_url',  '')
 on conflict (key) do nothing;
 
+-- 4. File(7) page config keys
+insert into site_config (key, value) values
+  ('address',          '195 Hoàng Sa, P. Tân Định, Quận 1, TP.HCM'),
+  ('opening_hours',    '4h chiều – 2h sáng · Thứ 2 – Chủ Nhật'),
+  ('zalo_link',        ''),
+  ('fb_link',          'https://www.facebook.com/ditoi.nhauchatmoingon/'),
+  ('messenger_link',   'https://m.me/ditoi.nhauchatmoingon'),
+  ('maps_embed_url',   ''),
+  ('parking_image_url',''),
+  ('menu_tab_1',  ''), ('menu_tab_2',  ''), ('menu_tab_3',  ''),
+  ('menu_tab_4',  ''), ('menu_tab_5',  ''), ('menu_tab_6',  ''),
+  ('menu_tab_7',  ''), ('menu_tab_8',  ''), ('menu_tab_9',  ''), ('menu_tab_10', ''),
+  ('hero_slide_1',''), ('hero_slide_2',''), ('hero_slide_3',''),
+  ('hero_slide_4',''), ('hero_slide_5',''), ('hero_slide_6',''),
+  ('review_photo_1',''), ('review_photo_2',''), ('review_photo_3','')
+on conflict (key) do nothing;
+
 -- 4. Row-level security
 alter table site_config enable row level security;
 

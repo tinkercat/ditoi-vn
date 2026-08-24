@@ -1,200 +1,137 @@
 import { useState } from 'react'
 
-// Time slots from 16:00 to 01:30 every 30 minutes
-const TIME_SLOTS = (() => {
-  const slots = []
-  for (let h = 16; h <= 25; h++) {
-    for (const m of [0, 30]) {
-      if (h === 25 && m === 30) break
-      const hour = h % 24
-      const label = `${String(hour).padStart(2, '0')}:${m === 0 ? '00' : '30'}`
-      slots.push(label)
-    }
-  }
-  return slots
-})()
-
-const PROMOTIONS = [
-  'Ưu đãi sinh nhật (giảm 10% tổng hoá đơn)',
-  'Có mã ưu đãi riêng',
-  'Đẩy tiền, không cần ưu đãi',
+const PROMOS = [
+  { value: 'Nhậu là vui là được, không cần ưu đãi', label: 'Nhậu là vui là được, không cần ưu đãi' },
+  { value: 'Giảm 10% Mồi Bén - dịp sinh nhật',       label: 'Giảm 10% Mồi Bén – dịp sinh nhật' },
+  { value: 'Giảm 5% Mồi Bén - đến sớm 16h-18h30',    label: 'Giảm 5% Mồi Bén – đến sớm 16h–18h30 (Thứ 2–Thứ 5)' },
 ]
 
-function isMobile() {
-  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+const TIME_OPTS = ['16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00','22:30','23:00','23:30','00:00','00:30','01:00','01:30','02:00','02:30','03:00','03:30','04:00','04:30']
+
+function buildMessage({ name, phone, branch, guests, date, time, promo, note }) {
+  return [
+    'ĐẶT BÀN - DÍ TỚI',
+    `Tên: ${name}`,
+    `SĐT: ${phone}`,
+    `Cơ sở: ${branch}`,
+    `Số khách: ${guests}`,
+    `Ngày giờ: ${date || '(chưa chọn)'} lúc ${time}`,
+    `Ưu đãi: ${promo}`,
+    `Ghi chú: ${note || '(không có)'}`,
+  ].join('\n')
 }
 
-function buildZaloMessage(form, branch) {
-  const lines = [
-    '[ĐẶT BÀN DÍ TỚI]',
-    `Tên: ${form.name}`,
-    `SĐT: ${form.phone}`,
-    `Chi nhánh: ${branch || 'Dí Tới Q.10'}`,
-    `Số khách: ${form.guests}`,
-    `Ngày: ${form.date || '—'}`,
-    `Giờ: ${form.time || '—'}`,
-    `Ưu đãi: ${form.promotion || 'Không'}`,
-  ]
-  return lines.join('\n')
-}
-
-export default function BookingModal({ onClose, hotline, branchName }) {
+export default function BookingModal({ onClose, hotline, branchName, zaloLink, messengerLink }) {
   const today = new Date().toISOString().split('T')[0]
-  const [form, setForm] = useState({
-    name: '', phone: '', guests: 1, date: today, time: '', promotion: '',
-  })
-  const [promoOpen, setPromoOpen] = useState(false)
+  const defaultBranch = branchName || 'Dí Tới – 195 Hoàng Sa, Q.1'
+  const [form, setForm] = useState({ name: '', phone: '', branch: defaultBranch, guests: 1, date: today, time: '19:00', promo: PROMOS[0].value, note: '' })
   const [submitting, setSubmitting] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
+  const [result, setResult] = useState(null)
   const [error, setError] = useState('')
 
-  function set(key) {
-    return e => setForm(prev => ({ ...prev, [key]: e.target.value }))
-  }
+  function set(key) { return e => setForm(prev => ({ ...prev, [key]: e.target.value })) }
+  function adjustGuests(d) { setForm(prev => ({ ...prev, guests: Math.max(1, prev.guests + d) })) }
 
-  function adjustGuests(delta) {
-    setForm(prev => ({ ...prev, guests: Math.max(1, prev.guests + delta) }))
-  }
-
-  async function handleSubmit() {
-    if (!form.name.trim() || !form.phone.trim()) {
-      setError('Vui lòng nhập tên và số điện thoại.')
-      return
-    }
+  async function handleSubmit(e) {
+    e.preventDefault()
+    if (!form.name.trim() || !form.phone.trim()) { setError('Vui lòng nhập tên và số điện thoại.'); return }
     setError('')
     setSubmitting(true)
 
+    fetch('/api/booking', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ customer_name: form.name.trim(), phone: form.phone.trim(), branch: form.branch, guests: form.guests, booking_date: form.date || null, booking_time: form.time || null, promotion: form.promo }),
+    }).catch(() => {})
+
+    const msg = buildMessage(form)
+    const phone = (hotline || '0979838250').replace(/\D/g, '')
+    const emailHref = `mailto:tutiensinhtts@gmail.com?subject=${encodeURIComponent(`Đặt bàn Dí Tới - ${form.name}`)}&body=${encodeURIComponent(msg)}`
+    const zaloHref = zaloLink || `https://zalo.me/${phone}?text=${encodeURIComponent(msg)}`
+
+    let copied = false
     try {
-      await fetch('/api/booking', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          customer_name: form.name.trim(),
-          phone: form.phone.trim(),
-          branch: branchName,
-          guests: form.guests,
-          booking_date: form.date || null,
-          booking_time: form.time || null,
-          promotion: form.promotion || null,
-        }),
-      })
-    } catch {
-      // non-blocking: still open Zalo even if DB save fails
-    }
+      if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(msg); copied = true }
+      else {
+        const ta = document.createElement('textarea')
+        ta.value = msg; ta.style.position = 'fixed'; ta.style.left = '-9999px'
+        document.body.appendChild(ta); ta.focus(); ta.select()
+        copied = document.execCommand('copy')
+        document.body.removeChild(ta)
+      }
+    } catch { copied = false }
 
-    setSubmitted(true)
+    setResult({ copied, emailHref, zaloHref, msgHref: messengerLink || '#', phone: hotline || '0979838250' })
     setSubmitting(false)
-
-    if (isMobile()) {
-      const msg = buildZaloMessage(form, branchName)
-      const phone = (hotline || '0979838250').replace(/\D/g, '')
-      const encoded = encodeURIComponent(msg)
-      // open Zalo with pre-filled message; falls back to plain chat if text param unsupported
-      setTimeout(() => {
-        window.location.href = `https://zalo.me/${phone}?text=${encoded}`
-      }, 800)
-    }
   }
 
   return (
-    <div className="booking-overlay" onClick={onClose}>
-      <div className="booking-modal" onClick={e => e.stopPropagation()}>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-box" onClick={e => e.stopPropagation()}>
+        <button className="modal-x" onClick={onClose} aria-label="Đóng">✕</button>
+        <h3>Đặt bàn</h3>
+        <p className="sub">Điền thông tin · Quán xác nhận qua Zalo trong 15 phút</p>
 
-        {submitted ? (
-          <div className="booking-success">
-            <div className="booking-title">ĐẶT BÀN THÀNH CÔNG! 🎉</div>
-            <p>Cảm ơn bạn đã đặt bàn tại Dí Tới.</p>
-            {isMobile()
-              ? <p>Zalo sẽ mở để xác nhận đặt bàn với quán nhé!</p>
-              : <p>Quán sẽ liên hệ lại qua số <strong>{form.phone}</strong> sớm nhất.</p>
-            }
-            <button className="booking-submit" onClick={onClose}>ĐÓNG</button>
-          </div>
+        {!result ? (
+          <form onSubmit={handleSubmit}>
+            <div className="modal-sec"><span className="bar" /><span>Thông tin của bạn</span></div>
+            <div className="form-grid">
+              <div className="field"><label>Tên của bạn</label><input type="text" placeholder="Tên của bạn" value={form.name} onChange={set('name')} required /></div>
+              <div className="field"><label>Số điện thoại</label><input type="tel" placeholder="Số điện thoại" value={form.phone} onChange={set('phone')} required /></div>
+            </div>
+
+            <div className="modal-sec"><span className="bar" /><span>Thông tin đặt bàn</span></div>
+            <div className="form-grid">
+              <div className="field full"><label>Chi nhánh</label><select value={form.branch} onChange={set('branch')}><option value={defaultBranch}>{defaultBranch}</option></select></div>
+              <div className="field">
+                <label>Số lượng khách</label>
+                <div className="guest-stepper">
+                  <button type="button" onClick={() => adjustGuests(-1)}>−</button>
+                  <span>{form.guests}</span>
+                  <button type="button" onClick={() => adjustGuests(1)}>+</button>
+                </div>
+              </div>
+              <div className="field"><label>Ngày đặt</label><input type="date" value={form.date} min={today} onChange={set('date')} /></div>
+              <div className="field full"><label>Giờ đến</label>
+                <div className="field-icon-wrap"><span className="field-emoji">🕐</span>
+                  <select className="icon-padded" value={form.time} onChange={set('time')}>
+                    {TIME_OPTS.map(t => <option key={t} value={t}>{t}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div className="field full"><label>Ưu đãi</label>
+                <div className="field-icon-wrap"><span className="field-emoji">🎟️</span>
+                  <select className="icon-padded" value={form.promo} onChange={set('promo')}>
+                    {PROMOS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div className="field full"><label>Ghi chú</label><textarea placeholder="Ghi chú thêm (không bắt buộc)" value={form.note} onChange={set('note')} /></div>
+            </div>
+
+            {error && <p style={{ color: '#cc2a1b', fontSize: '0.85rem', margin: '8px 0 0' }}>{error}</p>}
+            <div className="modal-actions">
+              <button type="button" className="link-close" onClick={onClose}>Đóng</button>
+              <button type="submit" className="btn-submit" disabled={submitting}>{submitting ? 'Đang gửi...' : 'Đặt Bàn Ngay'}</button>
+            </div>
+          </form>
         ) : (
-          <>
-            <div className="booking-title">Đặt bàn</div>
-
-            <div className="booking-section-label">Thông tin của bạn</div>
-            <input
-              className="booking-input"
-              type="text"
-              placeholder="Tên của bạn"
-              value={form.name}
-              onChange={set('name')}
-            />
-            <input
-              className="booking-input"
-              type="tel"
-              placeholder="Số điện thoại"
-              value={form.phone}
-              onChange={set('phone')}
-            />
-
-            <div className="booking-section-label">Thông tin đặt bàn</div>
-            <div className="booking-input booking-branch">{branchName || 'Dí Tới Q.10'}</div>
-
-            <div className="booking-row">
-              <div className="booking-guests">
-                <span className="booking-row-label">Số lượng khách</span>
-                <div className="guest-counter">
-                  <button className="guest-btn" onClick={() => adjustGuests(-1)}>−</button>
-                  <span className="guest-count">{form.guests}</span>
-                  <button className="guest-btn" onClick={() => adjustGuests(1)}>+</button>
-                </div>
-              </div>
-              <div className="booking-date-wrap">
-                <span className="booking-row-label">Ngày đặt</span>
-                <input
-                  className="booking-input booking-date"
-                  type="date"
-                  value={form.date}
-                  min={today}
-                  onChange={set('date')}
-                />
-              </div>
-              <div className="booking-time-wrap">
-                <span className="booking-row-label">Giờ đến</span>
-                <select className="booking-input booking-select" value={form.time} onChange={set('time')}>
-                  <option value="">Chọn giờ</option>
-                  {TIME_SLOTS.map(t => <option key={t} value={t}>{t}</option>)}
-                </select>
-              </div>
+          <div className="result-panel show">
+            <p>{result.copied
+              ? 'Đã sao chép nội dung đặt bàn. Bấm "Gửi Email" để gửi thẳng cho quán, hoặc "Gọi ngay" / dán vào Zalo, Messenger để xác nhận.'
+              : 'Bấm "Gửi Email" để gửi yêu cầu đặt bàn, hoặc "Gọi ngay" / mở Zalo để nhắn trực tiếp.'
+            }</p>
+            <div className="result-actions">
+              <a href={`tel:${result.phone.replace(/\D/g,'')}`} className="r-call">📞 Gọi ngay</a>
+              <a href={result.emailHref} className="r-email">📧 Gửi Email</a>
+              <a href={result.zaloHref} target="_blank" rel="noopener noreferrer" className="r-zalo">💬 Gửi qua Zalo</a>
+              {result.msgHref !== '#' && <a href={result.msgHref} target="_blank" rel="noopener noreferrer" className="r-msg">✉ Messenger</a>}
             </div>
-
-            {/* Promotion accordion */}
-            <div className="promo-accordion">
-              <button className="promo-header" onClick={() => setPromoOpen(o => !o)}>
-                <span>🎁 {form.promotion || 'Chọn ưu đãi'}</span>
-                <span className="promo-chevron">{promoOpen ? '▲' : '▼'}</span>
-              </button>
-              {promoOpen && (
-                <div className="promo-list">
-                  {PROMOTIONS.map(p => (
-                    <button
-                      key={p}
-                      className={`promo-option${form.promotion === p ? ' selected' : ''}`}
-                      onClick={() => { setForm(prev => ({ ...prev, promotion: p })); setPromoOpen(false) }}
-                    >
-                      {p}
-                    </button>
-                  ))}
-                </div>
-              )}
+            <div className="modal-actions" style={{ marginTop: 20 }}>
+              <span />
+              <button className="btn-submit" onClick={onClose}>Xong</button>
             </div>
-
-            {error && <div className="booking-error">{error}</div>}
-
-            <div className="booking-footer">
-              <button className="booking-close-btn" onClick={onClose}>Đóng</button>
-              <button
-                className="booking-submit"
-                onClick={handleSubmit}
-                disabled={submitting}
-              >
-                {submitting ? 'ĐANG GỬI...' : 'ĐẶT BÀN NGAY'}
-              </button>
-            </div>
-          </>
+          </div>
         )}
       </div>
     </div>

@@ -1,22 +1,42 @@
-const FALLBACK_BG = '/images/background.jpg'
-const FALLBACK_LOGO = '/images/logo.png'
-
-export default function HeroSection({ backgroundImageUrl, logoUrl, slogan, onBookingOpen }) {
-  const bgImage = backgroundImageUrl || FALLBACK_BG
-  const logo = logoUrl || FALLBACK_LOGO
-  const heroBgStyle = {
-    backgroundImage: `linear-gradient(to bottom, rgba(24,16,0,0) 0%, rgba(24,16,0,0.4) 50%, rgba(24,16,0,1) 100%), url('${bgImage}')`,
-    backgroundPosition: 'center',
-    backgroundSize: 'cover',
-  }
+export default function HeroSection({ backgroundImageUrl, hotline, address, openingHours, slides, onBookingOpen, onLightbox }) {
+  const validSlides = (slides || []).filter(Boolean)
+  const displaySlides = validSlides.length > 0 ? [...validSlides, ...validSlides] : []
 
   return (
-    <header className="hero">
-      <div className="hero-bg" style={heroBgStyle} />
-      <img className="logo-img" src={logo} alt="Dí Tới logo" />
-      <div className="slogan-badge">{slogan || "ĐÃ 'DÍ' LÀ PHẢI 'TỚI'"}</div>
-      <div className="hero-sub">NHẬU CHẤT – MỒI NGON</div>
-      <button className="hero-book-btn" onClick={onBookingOpen}>🍺 ĐẶT BÀN NGAY</button>
-    </header>
+    <section className="hero" id="trang-chu">
+      {backgroundImageUrl && (
+        <div className="hero-bg-img" style={{ backgroundImage: `url('${backgroundImageUrl}')` }} />
+      )}
+      <div className="hero-inner">
+        <div className="hero-tag">★ Quán nhậu vỉa hè · Sài Gòn</div>
+        <h1>QUÁN NHẬU DÍ TỚI</h1>
+        <p className="lead">Mồi nóng dọn liền tay, bia mát không bao giờ vơi ly. Anh em ghé Dí Tới, đã dí là phải tới bến — không dí nửa vời.</p>
+        <div className="hero-ctas">
+          <button className="btn btn-primary" onClick={onBookingOpen}>Đặt Bàn Ngay</button>
+          <a className="btn btn-outline" href="#thuc-don"
+            onClick={e => { e.preventDefault(); document.getElementById('thuc-don')?.scrollIntoView({ behavior: 'smooth' }) }}>
+            Xem Thực Đơn
+          </a>
+        </div>
+        <div className="hero-meta">
+          <div><strong>{openingHours || '4H CHIỀU – 2H SÁNG'}</strong>Mở cửa mỗi ngày, Thứ 2 – Chủ Nhật</div>
+          <div><strong>{address || '195 HOÀNG SA'}</strong>P. Tân Định, Quận 1, TP.HCM</div>
+          <div><strong>{hotline || '0979 838 250'}</strong>Gọi đặt bàn hoặc hỏi mồi hôm nay</div>
+        </div>
+      </div>
+      {displaySlides.length > 0 && (
+        <div className="hero-slider-wrap">
+          <div className="hero-slider">
+            {displaySlides.map((src, i) => (
+              <img key={i} src={src}
+                alt={i < validSlides.length ? 'Không khí tại Dí Tới' : ''}
+                aria-hidden={i >= validSlides.length || undefined}
+                onClick={() => i < validSlides.length && onLightbox(src)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </section>
   )
 }

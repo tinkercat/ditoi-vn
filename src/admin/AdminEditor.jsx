@@ -5,9 +5,16 @@ import MediaUploader from './components/MediaUploader'
 
 const EMPTY_CONFIG = {
   maps_link: '',
+  maps_embed_url: '',
   menu_link: '',
   hotline: '',
+  address: '',
+  opening_hours: '',
   slogan: '',
+  zalo_link: '',
+  fb_link: '',
+  messenger_link: '',
+  branch_name: '',
   promo_fb: '',
   promo_tt: '',
   promo_checkin: '',
@@ -15,9 +22,12 @@ const EMPTY_CONFIG = {
   background_image_url: '',
   logo_url: '',
   brand_font_url: '',
-  branch_name: '',
-  menu_cover_url: '',
-  menu_drinks_url: '',
+  parking_image_url: '',
+  menu_tab_1: '', menu_tab_2: '', menu_tab_3: '', menu_tab_4: '', menu_tab_5: '',
+  menu_tab_6: '', menu_tab_7: '', menu_tab_8: '', menu_tab_9: '', menu_tab_10: '',
+  hero_slide_1: '', hero_slide_2: '', hero_slide_3: '',
+  hero_slide_4: '', hero_slide_5: '', hero_slide_6: '',
+  review_photo_1: '', review_photo_2: '', review_photo_3: '',
 }
 
 export default function AdminEditor() {
@@ -88,84 +98,70 @@ export default function AdminEditor() {
               <input type="url" value={config.maps_link} onChange={set('maps_link')} placeholder="https://maps.app.goo.gl/..." />
             </div>
             <div className="admin-group">
+              <label>Google Maps Embed URL (lấy từ Google Maps → Chia sẻ → Nhúng bản đồ)</label>
+              <input type="url" value={config.maps_embed_url} onChange={set('maps_embed_url')} placeholder="https://www.google.com/maps/embed?pb=..." />
+            </div>
+            <div className="admin-group">
               <label>Hotline</label>
               <input type="text" value={config.hotline} onChange={set('hotline')} placeholder="0979838250" />
+            </div>
+            <div className="admin-group">
+              <label>Địa chỉ</label>
+              <input type="text" value={config.address} onChange={set('address')} placeholder="195 Hoàng Sa, P. Tân Định, Quận 1, TP.HCM" />
+            </div>
+            <div className="admin-group">
+              <label>Giờ mở cửa</label>
+              <input type="text" value={config.opening_hours} onChange={set('opening_hours')} placeholder="4h chiều – 2h sáng · Thứ 2 – Chủ Nhật" />
             </div>
             <div className="admin-group">
               <label>Link Menu</label>
               <input type="url" value={config.menu_link} onChange={set('menu_link')} placeholder="https://..." />
             </div>
-
-            <div className="section-label">2. Nội dung</div>
-
             <div className="admin-group">
-              <label>Slogan (khung đỏ)</label>
-              <input type="text" value={config.slogan} onChange={set('slogan')} placeholder="ĐÃ 'DÍ' LÀ PHẢI 'TỚI'" />
-            </div>
-
-            <div className="section-label">3. Badge ưu đãi</div>
-
-            <div className="admin-group">
-              <label>Facebook</label>
-              <input type="text" value={config.promo_fb} onChange={set('promo_fb')} placeholder="GIẢM 10%" />
+              <label>Zalo Link</label>
+              <input type="url" value={config.zalo_link} onChange={set('zalo_link')} placeholder="https://zalo.me/..." />
             </div>
             <div className="admin-group">
-              <label>TikTok</label>
-              <input type="text" value={config.promo_tt} onChange={set('promo_tt')} placeholder="TẶNG 1 MÓN" />
+              <label>Facebook Page Link</label>
+              <input type="url" value={config.fb_link} onChange={set('fb_link')} placeholder="https://facebook.com/..." />
             </div>
             <div className="admin-group">
-              <label>Check-in</label>
-              <input type="text" value={config.promo_checkin} onChange={set('promo_checkin')} placeholder="GIẢM 5%" />
-            </div>
-            <div className="admin-group">
-              <label>Đánh giá Google</label>
-              <input type="text" value={config.promo_review} onChange={set('promo_review')} placeholder="TẶNG NƯỚC" />
+              <label>Messenger Link</label>
+              <input type="url" value={config.messenger_link} onChange={set('messenger_link')} placeholder="https://m.me/..." />
             </div>
 
-            <div className="section-label">4. Media &amp; Thương hiệu</div>
-
-            <MediaUploader
-              label="Ảnh nền quán"
-              accept="image/*"
-              currentUrl={config.background_image_url}
-              onUploaded={url => setConfig(prev => ({ ...prev, background_image_url: url }))}
-            />
-            <MediaUploader
-              label="Logo (PNG nền trong suốt)"
-              accept="image/png,image/webp"
-              currentUrl={config.logo_url}
-              onUploaded={url => setConfig(prev => ({ ...prev, logo_url: url }))}
-            />
-            <MediaUploader
-              label="Font thương hiệu (.otf, .ttf)"
-              accept=".otf,.ttf"
-              currentUrl={config.brand_font_url}
-              onUploaded={url => setConfig(prev => ({ ...prev, brand_font_url: url }))}
-            />
-
-            <div className="section-label">5. Đặt bàn &amp; Menu ảnh</div>
+            <div className="section-label">2. Đặt bàn</div>
 
             <div className="admin-group">
               <label>Tên chi nhánh (hiển thị trong form đặt bàn)</label>
-              <input
-                type="text"
-                value={config.branch_name}
-                onChange={set('branch_name')}
-                placeholder="1A Tam Đảo, P. Hoà Hưng, Q.10, HCM"
-              />
+              <input type="text" value={config.branch_name} onChange={set('branch_name')} placeholder="Dí Tới – 195 Hoàng Sa, Q.1" />
             </div>
-            <MediaUploader
-              label="Ảnh menu – Tuyển Tập (bìa đỏ)"
-              accept="image/*"
-              currentUrl={config.menu_cover_url}
-              onUploaded={url => setConfig(prev => ({ ...prev, menu_cover_url: url }))}
-            />
-            <MediaUploader
-              label="Ảnh menu – Đồ Uống (bìa vàng)"
-              accept="image/*"
-              currentUrl={config.menu_drinks_url}
-              onUploaded={url => setConfig(prev => ({ ...prev, menu_drinks_url: url }))}
-            />
+
+            <div className="section-label">3. Media &amp; Thương hiệu</div>
+
+            <MediaUploader label="Ảnh nền quán (hero background)" accept="image/*" currentUrl={config.background_image_url} onUploaded={url => setConfig(prev => ({ ...prev, background_image_url: url }))} />
+            <MediaUploader label="Logo (PNG nền trong suốt)" accept="image/png,image/webp" currentUrl={config.logo_url} onUploaded={url => setConfig(prev => ({ ...prev, logo_url: url }))} />
+            <MediaUploader label="Font thương hiệu (.otf, .ttf)" accept=".otf,.ttf" currentUrl={config.brand_font_url} onUploaded={url => setConfig(prev => ({ ...prev, brand_font_url: url }))} />
+
+            <div className="section-label">4. Hero Slider (ảnh cuộn tự động)</div>
+            {[1,2,3,4,5,6].map(n => (
+              <MediaUploader key={n} label={`Ảnh slider ${n}`} accept="image/*" currentUrl={config[`hero_slide_${n}`]} onUploaded={url => setConfig(prev => ({ ...prev, [`hero_slide_${n}`]: url }))} />
+            ))}
+
+            <div className="section-label">5. Thực đơn – ảnh từng tab</div>
+            {[
+              [1,'Tuyển Tập'],[2,'Đồ Uống'],[3,'Khai Vị & Salad'],
+              [4,'Chiên & Rang'],[5,'Xào & Hấp'],[6,'Xanh & Nướng'],
+              [7,'Lẩu & Soup'],[8,'Dí Luôn Không Về'],[9,'Dí Mồi'],[10,'Dí Tới Bến'],
+            ].map(([n, label]) => (
+              <MediaUploader key={n} label={`Tab ${n}: ${label}`} accept="image/*" currentUrl={config[`menu_tab_${n}`]} onUploaded={url => setConfig(prev => ({ ...prev, [`menu_tab_${n}`]: url }))} />
+            ))}
+
+            <div className="section-label">6. Ảnh đánh giá &amp; ưu đãi</div>
+            <MediaUploader label="Ảnh khách hàng 1 (mục Đánh Giá)" accept="image/*" currentUrl={config.review_photo_1} onUploaded={url => setConfig(prev => ({ ...prev, review_photo_1: url }))} />
+            <MediaUploader label="Ảnh khách hàng 2" accept="image/*" currentUrl={config.review_photo_2} onUploaded={url => setConfig(prev => ({ ...prev, review_photo_2: url }))} />
+            <MediaUploader label="Ảnh khách hàng 3" accept="image/*" currentUrl={config.review_photo_3} onUploaded={url => setConfig(prev => ({ ...prev, review_photo_3: url }))} />
+            <MediaUploader label="Ảnh bãi xe miễn phí (mục Ưu Đãi)" accept="image/*" currentUrl={config.parking_image_url} onUploaded={url => setConfig(prev => ({ ...prev, parking_image_url: url }))} />
 
             <button
               className={saveBtnClass}
