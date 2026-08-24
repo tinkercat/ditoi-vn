@@ -49,17 +49,6 @@ export default function CustomerPage() {
       .catch(() => {})
   }, [])
 
-  // inject brand font override
-  useEffect(() => {
-    if (!config.brand_font_url) return
-    const style = document.createElement('style')
-    style.id = 'brand-font'
-    style.textContent = `@font-face{font-family:'BrandFont';src:url('${config.brand_font_url}');}:root{--font-heading:'BrandFont','Oswald',sans-serif;}`
-    const existing = document.getElementById('brand-font')
-    if (existing) existing.replaceWith(style)
-    else document.head.appendChild(style)
-  }, [config.brand_font_url])
-
   // lock body scroll when modal open
   useEffect(() => {
     document.body.style.overflow = (bookingOpen || lightboxSrc) ? 'hidden' : ''
