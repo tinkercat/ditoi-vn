@@ -53,11 +53,13 @@ on conflict (key) do nothing;
 alter table site_config enable row level security;
 
 -- Anyone can read (customer page fetches without auth)
+drop policy if exists "Public read" on site_config;
 create policy "Public read"
   on site_config for select
   using (true);
 
 -- Only authenticated users (admin) can write
+drop policy if exists "Admin write" on site_config;
 create policy "Admin write"
   on site_config for all
   using (auth.role() = 'authenticated');
@@ -80,11 +82,13 @@ create table if not exists bookings (
 alter table bookings enable row level security;
 
 -- Public can insert (no auth needed to make a booking)
+drop policy if exists "Public insert" on bookings;
 create policy "Public insert"
   on bookings for insert
   with check (true);
 
 -- Only admin can read bookings
+drop policy if exists "Admin read" on bookings;
 create policy "Admin read"
   on bookings for select
   using (auth.role() = 'authenticated');
