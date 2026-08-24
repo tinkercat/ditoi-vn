@@ -15,6 +15,9 @@ const EMPTY_CONFIG = {
   background_image_url: '',
   logo_url: '',
   brand_font_url: '',
+  branch_name: '',
+  menu_cover_url: '',
+  menu_drinks_url: '',
 }
 
 export default function AdminEditor() {
@@ -138,6 +141,30 @@ export default function AdminEditor() {
               accept=".otf,.ttf"
               currentUrl={config.brand_font_url}
               onUploaded={url => setConfig(prev => ({ ...prev, brand_font_url: url }))}
+            />
+
+            <div className="section-label">5. Đặt bàn &amp; Menu ảnh</div>
+
+            <div className="admin-group">
+              <label>Tên chi nhánh (hiển thị trong form đặt bàn)</label>
+              <input
+                type="text"
+                value={config.branch_name}
+                onChange={set('branch_name')}
+                placeholder="1A Tam Đảo, P. Hoà Hưng, Q.10, HCM"
+              />
+            </div>
+            <MediaUploader
+              label="Ảnh menu – Tuyển Tập (bìa đỏ)"
+              accept="image/*"
+              currentUrl={config.menu_cover_url}
+              onUploaded={url => setConfig(prev => ({ ...prev, menu_cover_url: url }))}
+            />
+            <MediaUploader
+              label="Ảnh menu – Đồ Uống (bìa vàng)"
+              accept="image/*"
+              currentUrl={config.menu_drinks_url}
+              onUploaded={url => setConfig(prev => ({ ...prev, menu_drinks_url: url }))}
             />
 
             <button
