@@ -25,7 +25,14 @@ insert into site_config (key, value) values
   ('brand_font_url',       '')
 on conflict (key) do nothing;
 
--- 3. Row-level security
+-- 3. New config keys for booking + menu gallery
+insert into site_config (key, value) values
+  ('branch_name',      '1A Tam Đảo, P. Hoà Hưng, Q.10, HCM'),
+  ('menu_cover_url',   ''),
+  ('menu_drinks_url',  '')
+on conflict (key) do nothing;
+
+-- 4. Row-level security
 alter table site_config enable row level security;
 
 -- Anyone can read (customer page fetches without auth)
@@ -36,6 +43,33 @@ create policy "Public read"
 -- Only authenticated users (admin) can write
 create policy "Admin write"
   on site_config for all
+  using (auth.role() = 'authenticated');
+
+-- ═══════════════════════════════════════════════════════════════
+-- 5. Bookings table
+-- ═══════════════════════════════════════════════════════════════
+create table if not exists bookings (
+  id            uuid default gen_random_uuid() primary key,
+  customer_name text not null,
+  phone         text not null,
+  branch        text,
+  guests        integer default 1,
+  booking_date  date,
+  booking_time  text,
+  promotion     text,
+  created_at    timestamptz default now()
+);
+
+alter table bookings enable row level security;
+
+-- Public can insert (no auth needed to make a booking)
+create policy "Public insert"
+  on bookings for insert
+  with check (true);
+
+-- Only admin can read bookings
+create policy "Admin read"
+  on bookings for select
   using (auth.role() = 'authenticated');
 
 -- ═══════════════════════════════════════════════════════════════
