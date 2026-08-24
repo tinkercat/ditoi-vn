@@ -61,8 +61,8 @@
 }
 
 .logo-img {
-  max-width: 220px;
-  max-height: 130px;
+  max-width: 300px;
+  max-height: 180px;
   object-fit: contain;
   z-index: 5;
   animation: pulse-glow 2s infinite alternate ease-in-out;
