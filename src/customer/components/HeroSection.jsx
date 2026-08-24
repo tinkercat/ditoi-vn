@@ -1,12 +1,11 @@
 export default function HeroSection({ backgroundImageUrl, hotline, address, openingHours, slides, onBookingOpen, onLightbox }) {
+  const heroImage = backgroundImageUrl || '/images/extracted/img_background_image_url_hero-reference.jpg'
   const validSlides = (slides || []).filter(Boolean)
   const displaySlides = validSlides.length > 0 ? [...validSlides, ...validSlides] : []
 
   return (
     <section className="hero" id="trang-chu">
-      {backgroundImageUrl && (
-        <div className="hero-bg-img" style={{ backgroundImage: `url('${backgroundImageUrl}')` }} />
-      )}
+      <div className="hero-bg-img" style={{ backgroundImage: `url('${heroImage}')` }} />
       <div className="hero-inner">
         <div className="hero-tag">★ Quán nhậu vỉa hè · Sài Gòn</div>
         <h1>QUÁN NHẬU DÍ TỚI</h1>
