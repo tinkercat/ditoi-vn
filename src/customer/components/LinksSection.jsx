@@ -1,7 +1,16 @@
+import { useState } from 'react'
+import ComingSoonModal from './ComingSoonModal'
+
 const FB_URL = 'https://facebook.com/profile.php?id=61567342402429'
+const FB_MESSENGER_URL = 'https://m.me/profile.php?id=61567342402429'
 const TT_URL = 'https://tiktok.com/@hy.dit.ngn.t'
 const ZALO_URL = 'https://zalo.me/0979838250'
 const HOTLINE = '0979838250'
+
+// Android/iOS intent system will intercept these and open the native app
+function isMobile() {
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+}
 
 function openTab(url) {
   window.open(url, '_blank', 'noopener,noreferrer')
@@ -9,9 +18,22 @@ function openTab(url) {
 
 export default function LinksSection({ menuLink, promoBadges }) {
   const { fb, tt, checkin, review } = promoBadges
+  const [showComingSoon, setShowComingSoon] = useState(false)
+
+  function handleFacebook() {
+    if (isMobile()) openTab(FB_MESSENGER_URL)
+    else setShowComingSoon(true)
+  }
+
+  function handleZalo() {
+    if (isMobile()) openTab(ZALO_URL)
+    else setShowComingSoon(true)
+  }
 
   return (
     <>
+      {showComingSoon && <ComingSoonModal onClose={() => setShowComingSoon(false)} />}
+
       {/* ── MENU ── */}
       <div className="section-divider"><span>THỰC ĐƠN DÍ TỚI</span></div>
       <nav className="links-container">
@@ -29,10 +51,10 @@ export default function LinksSection({ menuLink, promoBadges }) {
       {/* ── ĐẶT BÀN ── */}
       <div className="section-divider"><span>ĐẶT BÀN &amp; LIÊN HỆ</span></div>
       <nav className="links-container">
-        <button onClick={() => openTab(FB_URL)} className="action-btn btn-center">
+        <button onClick={handleFacebook} className="action-btn btn-center">
           🍺 Đặt bàn qua Facebook
         </button>
-        <button onClick={() => openTab(ZALO_URL)} className="action-btn btn-center">
+        <button onClick={handleZalo} className="action-btn btn-center">
           💬 Đặt bàn qua Zalo
         </button>
         <button
