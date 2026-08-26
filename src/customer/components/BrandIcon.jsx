@@ -9,8 +9,7 @@ export function BrandIcon({ name, size = 24 }) {
 
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" strokeWidth="1.8" />
-      <text x="12" y="16.5" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="11" fill="currentColor" textAnchor="middle">Zalo</text>
+      <text x="12" y="15.5" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="8.5" fill="currentColor" textAnchor="middle">Zalo</text>
     </svg>
   )
 }
