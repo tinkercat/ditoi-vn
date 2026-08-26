@@ -7,9 +7,5 @@ export function BrandIcon({ name, size = 24 }) {
     )
   }
 
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <text x="12" y="15.5" fontFamily="Arial, sans-serif" fontWeight="700" fontSize="8.5" fill="currentColor" textAnchor="middle">Zalo</text>
-    </svg>
-  )
+  return <img src="/images/zalo-logo.png" alt="" aria-hidden="true" style={{ width: size, height: size, objectFit: 'cover', borderRadius: '50%' }} />
 }
