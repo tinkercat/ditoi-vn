@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { BrandIcon } from './BrandIcon'
 
 function isMobile() {
   return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
@@ -24,10 +25,10 @@ export default function FloatingButtons({ hotline, zaloLink, messengerLink }) {
           <span className="tip">Gọi ngay</span>📞
         </a>
         <button className="floater zalo" onClick={handleZalo} aria-label="Zalo" title="Zalo">
-          <span className="tip">Nhắn Zalo</span>Z
+          <span className="tip">Nhắn Zalo</span><BrandIcon name="zalo" />
         </button>
         <button className="floater messenger" onClick={handleMessenger} aria-label="Messenger" title="Messenger">
-          <span className="tip">Nhắn Messenger</span>M
+          <span className="tip">Nhắn Messenger</span><BrandIcon name="messenger" />
         </button>
       </div>
 

@@ -1,3 +1,5 @@
+import { BrandIcon } from './BrandIcon'
+
 const DEFAULT_MAPS_EMBED_URL = 'https://www.google.com/maps?q=195%20Ho%C3%A0ng%20Sa%2C%20Ph%C6%B0%E1%BB%9Dng%20T%C3%A2n%20%C4%90%E1%BB%8Bnh%2C%20Qu%E1%BA%ADn%201%2C%20TP.HCM&output=embed'
 
 export default function ContactSection({ hotline, address, openingHours, mapsLink, mapsEmbedUrl, zaloLink, fbLink, messengerLink, onBookingOpen }) {
@@ -18,9 +20,9 @@ export default function ContactSection({ hotline, address, openingHours, mapsLin
             </div>
             <div className="social-row" style={{ marginTop: 24 }}>
               <a href={`tel:${(hotline||'').replace(/\D/g,'')}`} aria-label="Gọi điện" title="Gọi điện">📞</a>
-              {zaloLink && <a href={zaloLink} target="_blank" rel="noopener noreferrer" aria-label="Zalo" title="Zalo">Z</a>}
+              {zaloLink && <a href={zaloLink} target="_blank" rel="noopener noreferrer" aria-label="Zalo" title="Zalo"><BrandIcon name="zalo" size={22} /></a>}
               {fbLink && <a href={fbLink} target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">f</a>}
-              {messengerLink && <a href={messengerLink} target="_blank" rel="noopener noreferrer" aria-label="Messenger" title="Messenger">M</a>}
+              {messengerLink && <a href={messengerLink} target="_blank" rel="noopener noreferrer" aria-label="Messenger" title="Messenger"><BrandIcon name="messenger" size={22} /></a>}
             </div>
             <div className="map-frame">
               <iframe
