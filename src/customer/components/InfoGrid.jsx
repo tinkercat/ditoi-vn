@@ -15,7 +15,7 @@ export default function InfoGrid({ mapsLink, hotline }) {
         <span className="info-icon">📍</span>
         <div className="info-content">
           <span className="info-label">Địa chỉ</span>
-          <span className="info-value">1A Tam Đảo, P. Hoà Hưng, Q.10, HCM</span>
+          <span className="info-value">195 Hoàng Sa, P. Tân Định, Quận 1, HCM</span>
         </div>
       </a>
 

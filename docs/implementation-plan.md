@@ -225,7 +225,7 @@ create table if not exists site_config (
 );
 
 insert into site_config (key, value) values
-  ('maps_link',            'https://maps.app.goo.gl/UjS1d73B7dVM6FyH9'),
+  ('maps_link',            'https://maps.app.goo.gl/GLcwnZUBRc1MGqig7'),
   ('menu_link',            'https://example.com/menu'),
   ('hotline',              '0979838250'),
   ('slogan',               'ĐÃ ''DÍ'' LÀ PHẢI ''TỚI'''),

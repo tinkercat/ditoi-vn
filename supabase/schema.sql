@@ -12,7 +12,7 @@ create table if not exists site_config (
 
 -- 2. Seed default values
 insert into site_config (key, value) values
-  ('maps_link',            'https://maps.app.goo.gl/UjS1d73B7dVM6FyH9'),
+  ('maps_link',            'https://maps.app.goo.gl/GLcwnZUBRc1MGqig7'),
   ('menu_link',            'https://example.com/menu'),
   ('hotline',              '0979838250'),
   ('slogan',               'ĐÃ ''DÍ'' LÀ PHẢI ''TỚI'''),
@@ -27,7 +27,7 @@ on conflict (key) do nothing;
 
 -- 3. New config keys for booking + menu gallery
 insert into site_config (key, value) values
-  ('branch_name',      '1A Tam Đảo, P. Hoà Hưng, Q.10, HCM'),
+  ('branch_name',      '195 Hoàng Sa, P. Tân Định, Quận 1, HCM'),
   ('menu_cover_url',   ''),
   ('menu_drinks_url',  '')
 on conflict (key) do nothing;

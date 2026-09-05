@@ -12,7 +12,7 @@ import FloatingButtons from './components/FloatingButtons'
 import BookingModal from './components/BookingModal'
 
 const DEFAULT_CONFIG = {
-  maps_link: 'https://maps.app.goo.gl/UjS1d73B7dVM6FyH9',
+  maps_link: 'https://maps.app.goo.gl/GLcwnZUBRc1MGqig7',
   maps_embed_url: '',
   menu_link: '',
   hotline: '0979838250',
