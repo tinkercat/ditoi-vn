@@ -18,8 +18,8 @@ export default function HeroSection({ backgroundImageUrl, hotline, address, open
           </a>
         </div>
         <div className="hero-meta">
-          <div><strong>{openingHours || '4H CHIỀU – 2H SÁNG'}</strong>Mở cửa mỗi ngày, Thứ 2 – Chủ Nhật</div>
-          <div><strong>{address || '195 HOÀNG SA'}</strong>P. Tân Định, Quận 1, TP.HCM</div>
+          <div><strong>{openingHours || '4H CHIỀU – 2H SÁNG'}</strong>Mở cửa mỗi ngày</div>
+          <div><strong>{address || '195 HOÀNG SA'}</strong></div>
           <div><strong>{hotline || '0979 838 250'}</strong>Gọi đặt bàn hoặc hỏi mồi hôm nay</div>
         </div>
       </div>
