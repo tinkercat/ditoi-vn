@@ -142,7 +142,6 @@ export default function CustomerPage() {
           <div className="foot-grid">
             <div className="foot-brand">
               {config.logo_url && <img src={config.logo_url} alt="Dí Tới logo" />}
-              <span className="foot-brand-text">DÍ <span>TỚI</span></span>
             </div>
             <p className="foot-note">Nhậu chất · Mồi ngon · Đúng gu Sài Gòn</p>
           </div>
