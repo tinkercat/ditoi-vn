@@ -49,6 +49,9 @@ const SECTION_IDS = new Set(['trang-chu', ...Object.values(PATH_SECTION_IDS)])
 
 export default function CustomerPage() {
   const [config, setConfig] = useState(DEFAULT_CONFIG)
+  const [configLoaded, setConfigLoaded] = useState(false)
+  const [pageReady, setPageReady] = useState(false)
+  const [loadProgress, setLoadProgress] = useState(0)
   const [bookingOpen, setBookingOpen] = useState(false)
   const [lightboxSrc, setLightboxSrc] = useState(null)
 
@@ -70,14 +73,81 @@ export default function CustomerPage() {
       window.removeEventListener('popstate', scrollToCurrentPath)
       window.removeEventListener('hashchange', scrollToCurrentPath)
     }
+  }, [pageReady])
+
+  useEffect(() => {
+    let active = true
+    const controller = new AbortController()
+    const timeoutId = window.setTimeout(() => controller.abort(), 8000)
+
+    fetch('/api/public-config', { signal: controller.signal })
+      .then(r => (r.ok ? r.json() : null))
+      .then(data => { if (active && data) setConfig(prev => ({ ...prev, ...data })) })
+      .catch(() => {})
+      .finally(() => {
+        window.clearTimeout(timeoutId)
+        if (active) setConfigLoaded(true)
+      })
+
+    return () => {
+      active = false
+      window.clearTimeout(timeoutId)
+      controller.abort()
+    }
   }, [])
 
   useEffect(() => {
-    fetch('/api/public-config')
-      .then(r => (r.ok ? r.json() : null))
-      .then(data => { if (data) setConfig(prev => ({ ...prev, ...data })) })
-      .catch(() => {})
-  }, [])
+    if (!configLoaded) return
+
+    let active = true
+    let timeoutId
+    let revealTimeoutId
+    const browserLoaded = document.readyState === 'complete'
+      ? Promise.resolve()
+      : new Promise(resolve => window.addEventListener('load', resolve, { once: true }))
+    const fontsLoaded = document.fonts?.ready ?? Promise.resolve()
+
+    async function waitForImages() {
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+
+      const images = Array.from(document.querySelectorAll('.page-content img'))
+      const heroBackground = document.querySelector('.hero-bg-img')
+      const backgroundImage = heroBackground ? getComputedStyle(heroBackground).backgroundImage : ''
+      if (backgroundImage.startsWith('url(')) {
+        const backgroundUrl = backgroundImage.slice(4, -1).replace(/^['"]|['"]$/g, '')
+        const image = new Image()
+        image.src = backgroundUrl
+        images.push(image)
+      }
+
+      await Promise.all(images.map(image => {
+        image.loading = 'eager'
+        if (typeof image.decode === 'function') return image.decode().catch(() => {})
+        if (image.complete) return Promise.resolve()
+        return new Promise(resolve => {
+          image.addEventListener('load', resolve, { once: true })
+          image.addEventListener('error', resolve, { once: true })
+        })
+      }))
+    }
+
+    const maxWait = new Promise(resolve => { timeoutId = window.setTimeout(resolve, 12000) })
+    Promise.race([Promise.all([browserLoaded, fontsLoaded, waitForImages()]), maxWait]).then(() => {
+      window.clearTimeout(timeoutId)
+      if (active) {
+        setLoadProgress(100)
+        revealTimeoutId = window.setTimeout(() => {
+          if (active) setPageReady(true)
+        }, 350)
+      }
+    })
+
+    return () => {
+      active = false
+      window.clearTimeout(timeoutId)
+      window.clearTimeout(revealTimeoutId)
+    }
+  }, [configLoaded])
 
   // lock body scroll when modal open
   useEffect(() => {
@@ -104,10 +174,17 @@ export default function CustomerPage() {
 
   return (
     <>
-      <NavBar logoUrl={config.logo_url} onBookingOpen={() => setBookingOpen(true)} />
-      <BeerGauge />
+      {!pageReady && (
+        <div className="page-loader" role="status" aria-live="polite">
+          <span className="page-loader-spinner" aria-hidden="true" />
+          <span className="page-loader-progress">{loadProgress}%</span>
+        </div>
+      )}
+      <div className={`page-content${pageReady ? ' is-ready' : ''}`} aria-hidden={!pageReady}>
+        <NavBar logoUrl={config.logo_url} onBookingOpen={() => setBookingOpen(true)} />
+        <BeerGauge />
 
-      <HeroSection
+        <HeroSection
         backgroundImageUrl={config.background_image_url}
         hotline={config.hotline}
         address={config.address}
@@ -117,23 +194,23 @@ export default function CustomerPage() {
         onLightbox={setLightboxSrc}
       />
 
-      <AboutSection
+        <AboutSection
         hotline={config.hotline}
         address={config.address}
         openingHours={config.opening_hours}
       />
 
-      <MenuSection menuImages={menuImages} onLightbox={setLightboxSrc} />
+        <MenuSection menuImages={menuImages} onLightbox={setLightboxSrc} />
 
-      <OffersSection parkingImageUrl={config.parking_image_url} onLightbox={setLightboxSrc} />
+        <OffersSection parkingImageUrl={config.parking_image_url} onLightbox={setLightboxSrc} />
 
-      <ReviewsSection
+        <ReviewsSection
         reviewPhotos={reviewPhotos}
         mapsLink={config.maps_link}
         onLightbox={setLightboxSrc}
       />
 
-      <ContactSection
+        <ContactSection
         hotline={config.hotline}
         address={config.address}
         openingHours={config.opening_hours}
@@ -145,7 +222,7 @@ export default function CustomerPage() {
         onBookingOpen={() => setBookingOpen(true)}
       />
 
-      <footer className="site-footer">
+        <footer className="site-footer">
         <div className="wrap">
           <div className="foot-grid">
             <div className="foot-brand">
@@ -160,13 +237,13 @@ export default function CustomerPage() {
         </div>
       </footer>
 
-      <FloatingButtons
+        <FloatingButtons
         hotline={config.hotline}
         zaloLink={zaloLink}
         messengerLink={messengerLink}
       />
 
-      {bookingOpen && (
+        {bookingOpen && (
         <BookingModal
           onClose={() => setBookingOpen(false)}
           hotline={config.hotline}
@@ -176,12 +253,13 @@ export default function CustomerPage() {
         />
       )}
 
-      {lightboxSrc && (
+        {lightboxSrc && (
         <div className="lightbox-overlay" onClick={() => setLightboxSrc(null)}>
           <img src={lightboxSrc} alt="Phóng to" />
           <button className="lbx-close" onClick={() => setLightboxSrc(null)}>✕</button>
         </div>
-      )}
+        )}
+      </div>
     </>
   )
 }
