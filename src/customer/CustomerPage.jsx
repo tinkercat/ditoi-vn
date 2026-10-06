@@ -91,6 +91,8 @@ export default function CustomerPage() {
   ]
 
   const reviewPhotos = [config.review_photo_1, config.review_photo_2, config.review_photo_3]
+  const zaloLink = config.zalo_link || `https://zalo.me/${(config.hotline || DEFAULT_CONFIG.hotline).replace(/\D/g, '')}`
+  const messengerLink = config.messenger_link || DEFAULT_CONFIG.messenger_link
 
   return (
     <>
@@ -129,9 +131,9 @@ export default function CustomerPage() {
         openingHours={config.opening_hours}
         mapsLink={config.maps_link}
         mapsEmbedUrl={config.maps_embed_url}
-        zaloLink={config.zalo_link}
+        zaloLink={zaloLink}
         fbLink={config.fb_link}
-        messengerLink={config.messenger_link}
+        messengerLink={messengerLink}
         onBookingOpen={() => setBookingOpen(true)}
       />
 
@@ -153,8 +155,8 @@ export default function CustomerPage() {
 
       <FloatingButtons
         hotline={config.hotline}
-        zaloLink={config.zalo_link}
-        messengerLink={config.messenger_link}
+        zaloLink={zaloLink}
+        messengerLink={messengerLink}
       />
 
       {bookingOpen && (
@@ -162,8 +164,8 @@ export default function CustomerPage() {
           onClose={() => setBookingOpen(false)}
           hotline={config.hotline}
           branchName={config.branch_name}
-          zaloLink={config.zalo_link}
-          messengerLink={config.messenger_link}
+          zaloLink={zaloLink}
+          messengerLink={messengerLink}
         />
       )}
 
