@@ -1,6 +1,6 @@
 export default function AboutSection({ hotline, address, openingHours }) {
   return (
-    <section className="about-section section-shell" id="gioi-thieu">
+    <section className="about-section section-shell" id="khong-gian">
       <div className="wrap about-grid">
         <div className="about-copy">
           <div className="eyebrow">Quán Dí Tới</div>

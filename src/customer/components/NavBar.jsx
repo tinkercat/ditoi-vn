@@ -10,7 +10,7 @@ export default function NavBar({ logoUrl, onBookingOpen }) {
   const links = [
     { label: 'Trang chủ', path: '/', id: 'trang-chu' },
     { label: 'Thực đơn', path: '/thuc-don', id: 'thuc-don' },
-    { label: 'Không gian Dí Tới', path: '/khong-gian', id: 'gioi-thieu' },
+    { label: 'Không gian Dí Tới', path: '/khong-gian', id: 'khong-gian' },
     { label: 'Đặt bàn', path: '/dat-ban', id: 'dat-ban' },
     { label: 'Sinh nhật & Tiệc nhóm', path: '/sinh-nhat', id: 'sinh-nhat' },
     { label: 'Ưu đãi', path: '/uu-dai', id: 'uu-dai' },
@@ -18,7 +18,10 @@ export default function NavBar({ logoUrl, onBookingOpen }) {
   ]
 
   function nav(path, id) {
-    if (window.location.pathname !== path) window.history.pushState({}, '', path)
+    const destination = path === '/' ? '/' : `/#${id}`
+    if (`${window.location.pathname}${window.location.hash}` !== destination) {
+      window.history.pushState({}, '', destination)
+    }
     scrollTo(id)
     setOpen(false)
   }

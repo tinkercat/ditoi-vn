@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import './customer.css'
 import NavBar from './components/NavBar'
 import BeerGauge from './components/BeerGauge'
@@ -38,30 +38,38 @@ const DEFAULT_CONFIG = {
 }
 
 const PATH_SECTION_IDS = {
-  '/': 'trang-chu',
   '/thuc-don': 'thuc-don',
-  '/khong-gian': 'gioi-thieu',
+  '/khong-gian': 'khong-gian',
   '/dat-ban': 'dat-ban',
   '/sinh-nhat': 'sinh-nhat',
   '/uu-dai': 'uu-dai',
   '/lien-he': 'lien-he',
 }
+const SECTION_IDS = new Set(['trang-chu', ...Object.values(PATH_SECTION_IDS)])
 
 export default function CustomerPage() {
   const [config, setConfig] = useState(DEFAULT_CONFIG)
   const [bookingOpen, setBookingOpen] = useState(false)
   const [lightboxSrc, setLightboxSrc] = useState(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     function scrollToCurrentPath() {
       const path = window.location.pathname.replace(/\/$/, '') || '/'
-      const sectionId = PATH_SECTION_IDS[path]
-      if (sectionId) requestAnimationFrame(() => document.getElementById(sectionId)?.scrollIntoView())
+      const pathSectionId = PATH_SECTION_IDS[path]
+      const hashSectionId = window.location.hash.slice(1)
+      const sectionId = pathSectionId || (SECTION_IDS.has(hashSectionId) ? hashSectionId : path === '/' ? 'trang-chu' : null)
+
+      if (pathSectionId) window.history.replaceState({}, '', `/#${pathSectionId}`)
+      if (sectionId) document.getElementById(sectionId)?.scrollIntoView({ behavior: 'instant', block: 'start' })
     }
 
     scrollToCurrentPath()
     window.addEventListener('popstate', scrollToCurrentPath)
-    return () => window.removeEventListener('popstate', scrollToCurrentPath)
+    window.addEventListener('hashchange', scrollToCurrentPath)
+    return () => {
+      window.removeEventListener('popstate', scrollToCurrentPath)
+      window.removeEventListener('hashchange', scrollToCurrentPath)
+    }
   }, [])
 
   useEffect(() => {
