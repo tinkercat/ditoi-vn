@@ -45,8 +45,8 @@ select:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outlin
 .nav-brand img{height:40px;width:auto;}
 .nav-brand-text{font-family:var(--font-heading);font-size:20px;font-weight:700;letter-spacing:.05em;color:var(--cream);line-height:1;}
 .nav-brand-text span{color:var(--gold);}
-.nav-links{display:flex;align-items:center;gap:30px;list-style:none;margin:0;padding:0;}
-.nav-links a{font-family:var(--font-heading);font-size:14px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;color:var(--cream-dim);padding:6px 2px;border-bottom:2px solid transparent;transition:.2s;}
+.nav-links{display:flex;align-items:center;gap:14px;list-style:none;margin:0;padding:0;}
+.nav-links a{font-family:var(--font-heading);font-size:12px;letter-spacing:.04em;text-transform:uppercase;text-decoration:none;color:var(--cream-dim);padding:6px 2px;border-bottom:2px solid transparent;transition:.2s;}
 .nav-links a:hover{color:var(--gold);border-color:var(--gold);}
 .nav-right{display:flex;align-items:center;gap:14px;}
 .nav-hamb{display:none;background:none;border:none;color:var(--cream);font-size:26px;cursor:pointer;line-height:1;}
@@ -55,7 +55,7 @@ select:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outlin
 .mobile-menu a,.mobile-menu button{font-family:var(--font-heading);font-size:16px;letter-spacing:.06em;text-transform:uppercase;color:var(--cream);text-decoration:none;padding:14px 24px;background:none;border:none;text-align:left;cursor:pointer;transition:color .2s;}
 .mobile-menu a:hover,.mobile-menu button:hover{color:var(--gold);}
 .mobile-menu .btn-primary{margin:12px 24px 0;padding:14px;justify-content:center;}
-@media(max-width:860px){.nav-links{display:none;}.nav-hamb{display:block;}}
+@media(max-width:1120px){.nav-links{display:none;}.nav-hamb{display:block;}}
 
 /* ── BEER GAUGE ───────────────────────────────────────────────── */
 .gauge{position:fixed;right:22px;top:50%;transform:translateY(-50%);z-index:400;width:54px;height:220px;display:flex;flex-direction:column;align-items:center;opacity:0;pointer-events:none;transition:opacity .4s ease;}
@@ -69,6 +69,7 @@ select:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outlin
 
 /* ── HERO ─────────────────────────────────────────────────────── */
 .hero{position:relative;padding:150px 0 0;overflow:hidden;background:radial-gradient(ellipse at 50% 20%,rgba(163,34,31,.28),transparent 55%),linear-gradient(180deg,rgba(23,17,13,.72),rgba(23,17,13,.95) 70%);}
+.hero,.section-shell,.offer,.reserve-card{scroll-margin-top:84px;}
 .hero-bg-img{position:absolute;inset:0;background-size:cover;background-position:center 20%;z-index:0;opacity:1;}
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 20%,rgba(163,34,31,.28),transparent 55%),linear-gradient(180deg,rgba(23,17,13,.72),rgba(23,17,13,.95) 70%);pointer-events:none;z-index:1;}
 .hero::after{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(0,0,0,.08) 0 2px,transparent 2px 60px);pointer-events:none;z-index:1;}

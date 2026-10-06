@@ -7,7 +7,18 @@ function scrollTo(id) {
 export default function NavBar({ logoUrl, onBookingOpen }) {
   const [open, setOpen] = useState(false)
 
-  function nav(id) {
+  const links = [
+    { label: 'Trang chủ', path: '/', id: 'trang-chu' },
+    { label: 'Thực đơn', path: '/thuc-don', id: 'thuc-don' },
+    { label: 'Không gian Dí Tới', path: '/khong-gian', id: 'gioi-thieu' },
+    { label: 'Đặt bàn', path: '/dat-ban', id: 'dat-ban' },
+    { label: 'Sinh nhật & Tiệc nhóm', path: '/sinh-nhat', id: 'sinh-nhat' },
+    { label: 'Ưu đãi', path: '/uu-dai', id: 'uu-dai' },
+    { label: 'Liên hệ / Địa chỉ', path: '/lien-he', id: 'lien-he' },
+  ]
+
+  function nav(path, id) {
+    if (window.location.pathname !== path) window.history.pushState({}, '', path)
     scrollTo(id)
     setOpen(false)
   }
@@ -15,18 +26,18 @@ export default function NavBar({ logoUrl, onBookingOpen }) {
   return (
     <header className="navbar">
       <div className="nav-inner">
-        <a href="#trang-chu" className="nav-brand" onClick={e => { e.preventDefault(); nav('trang-chu') }}>
+        <a href="/" className="nav-brand" onClick={e => { e.preventDefault(); nav('/', 'trang-chu') }}>
           {logoUrl
             ? <img src={logoUrl} alt="Dí Tới logo" />
             : <span className="nav-brand-text">DÍ <span>TỚI</span></span>
           }
         </a>
         <ul className="nav-links">
-          <li><a href="#thuc-don"   onClick={e => { e.preventDefault(); nav('thuc-don') }}>Thực Đơn</a></li>
-          <li><a href="#gioi-thieu" onClick={e => { e.preventDefault(); nav('gioi-thieu') }}>Quán Dí Tới</a></li>
-          <li><a href="#uu-dai"     onClick={e => { e.preventDefault(); nav('uu-dai') }}>Ưu Đãi</a></li>
-          <li><a href="#danh-gia"   onClick={e => { e.preventDefault(); nav('danh-gia') }}>Đánh Giá</a></li>
-          <li><a href="#lien-he"    onClick={e => { e.preventDefault(); nav('lien-he') }}>Liên Hệ</a></li>
+          {links.map(link => (
+            <li key={link.path}>
+              <a href={link.path} onClick={e => { e.preventDefault(); nav(link.path, link.id) }}>{link.label}</a>
+            </li>
+          ))}
         </ul>
         <div className="nav-right">
           <button className="btn btn-primary" onClick={onBookingOpen}>Đặt Bàn</button>
@@ -34,11 +45,11 @@ export default function NavBar({ logoUrl, onBookingOpen }) {
         </div>
       </div>
       <nav className={`mobile-menu${open ? ' open' : ''}`}>
-        <a href="#thuc-don"   onClick={e => { e.preventDefault(); nav('thuc-don') }}>Thực Đơn</a>
-        <a href="#gioi-thieu" onClick={e => { e.preventDefault(); nav('gioi-thieu') }}>Quán Dí Tới</a>
-        <a href="#uu-dai"     onClick={e => { e.preventDefault(); nav('uu-dai') }}>Ưu Đãi</a>
-        <a href="#danh-gia"   onClick={e => { e.preventDefault(); nav('danh-gia') }}>Đánh Giá</a>
-        <a href="#lien-he"    onClick={e => { e.preventDefault(); nav('lien-he') }}>Liên Hệ</a>
+        {links.map(link => (
+          <a key={link.path} href={link.path} onClick={e => { e.preventDefault(); nav(link.path, link.id) }}>
+            {link.label}
+          </a>
+        ))}
         <button className="btn btn-primary" onClick={() => { onBookingOpen(); setOpen(false) }}>Đặt Bàn Ngay</button>
       </nav>
     </header>

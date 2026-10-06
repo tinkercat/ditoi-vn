@@ -34,7 +34,7 @@ export default function ContactSection({ hotline, address, openingHours, mapsLin
               />
             </div>
           </div>
-          <div className="reserve-card">
+          <div className="reserve-card" id="dat-ban">
             <h3>Giữ bàn trước, khỏi lo chạy bàn</h3>
             <p>Đặt bàn online ngay — điền thông tin, chọn ưu đãi. Quán xác nhận qua Zalo trong vòng 15 phút.</p>
             <button className="btn btn-primary" onClick={onBookingOpen}>Đặt Bàn Ngay</button>

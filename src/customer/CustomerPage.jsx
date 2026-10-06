@@ -37,10 +37,32 @@ const DEFAULT_CONFIG = {
   parking_image_url: '',
 }
 
+const PATH_SECTION_IDS = {
+  '/': 'trang-chu',
+  '/thuc-don': 'thuc-don',
+  '/khong-gian': 'gioi-thieu',
+  '/dat-ban': 'dat-ban',
+  '/sinh-nhat': 'sinh-nhat',
+  '/uu-dai': 'uu-dai',
+  '/lien-he': 'lien-he',
+}
+
 export default function CustomerPage() {
   const [config, setConfig] = useState(DEFAULT_CONFIG)
   const [bookingOpen, setBookingOpen] = useState(false)
   const [lightboxSrc, setLightboxSrc] = useState(null)
+
+  useEffect(() => {
+    function scrollToCurrentPath() {
+      const path = window.location.pathname.replace(/\/$/, '') || '/'
+      const sectionId = PATH_SECTION_IDS[path]
+      if (sectionId) requestAnimationFrame(() => document.getElementById(sectionId)?.scrollIntoView())
+    }
+
+    scrollToCurrentPath()
+    window.addEventListener('popstate', scrollToCurrentPath)
+    return () => window.removeEventListener('popstate', scrollToCurrentPath)
+  }, [])
 
   useEffect(() => {
     fetch('/api/public-config')

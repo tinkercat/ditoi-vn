@@ -13,7 +13,7 @@ export default function OffersSection({ parkingImageUrl, onLightbox }) {
             <h3>Giờ mở cửa</h3>
             <p>Quán mở cửa từ 4h chiều đến 2h sáng, từ Thứ 2 đến Chủ Nhật.</p>
           </div>
-          <div className="offer">
+          <div className="offer" id="sinh-nhat">
             <div className="num">02 · Đặt trước</div>
             <h3>Sinh nhật đặt trước</h3>
             <ul>
