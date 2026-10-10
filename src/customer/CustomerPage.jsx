@@ -81,7 +81,6 @@ export default function CustomerPage() {
       const sectionId = pathSectionId || (SECTION_IDS.has(hashSectionId) ? hashSectionId : path === '/' ? 'trang-chu' : null)
 
       updateSeo(sectionId)
-      if (pathSectionId) window.history.replaceState({}, '', `/#${pathSectionId}`)
       if (sectionId) document.getElementById(sectionId)?.scrollIntoView({ behavior: 'instant', block: 'start' })
     }
 
