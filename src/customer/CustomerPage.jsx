@@ -47,6 +47,24 @@ const PATH_SECTION_IDS = {
 }
 const SECTION_IDS = new Set(['trang-chu', ...Object.values(PATH_SECTION_IDS)])
 
+const SEO_TITLES = {
+  'trang-chu': 'Dí Tới – Nhậu Chất, Mồi Ngon | Q.1 Sài Gòn',
+  'thuc-don': 'Thực đơn | Dí Tới – Quán nhậu Q.1 Sài Gòn',
+  'khong-gian': 'Không gian Dí Tới – Quán nhậu view sông Sài Gòn',
+  'dat-ban': 'Đặt bàn | Dí Tới – Quán nhậu Q.1 Sài Gòn',
+  'sinh-nhat': 'Sinh nhật & Tiệc nhóm | Dí Tới – Quán nhậu Q.1',
+  'uu-dai': 'Ưu đãi | Dí Tới – Quán nhậu Q.1 Sài Gòn',
+  'lien-he': 'Liên hệ & Địa chỉ | Dí Tới – 195 Hoàng Sa, Q.1',
+}
+
+function updateSeo(sectionId) {
+  const id = SEO_TITLES[sectionId] ? sectionId : 'trang-chu'
+  document.title = SEO_TITLES[id]
+  const canonical = document.querySelector('link[rel="canonical"]')
+  const url = id === 'trang-chu' ? 'https://ditoi.vn/' : `https://ditoi.vn/${id}`
+  if (canonical) canonical.setAttribute('href', url)
+  document.querySelector('meta[property="og:url"]')?.setAttribute('content', url)
+}
 export default function CustomerPage() {
   const [config, setConfig] = useState(DEFAULT_CONFIG)
   const [configLoaded, setConfigLoaded] = useState(false)
@@ -62,6 +80,7 @@ export default function CustomerPage() {
       const hashSectionId = window.location.hash.slice(1)
       const sectionId = pathSectionId || (SECTION_IDS.has(hashSectionId) ? hashSectionId : path === '/' ? 'trang-chu' : null)
 
+      updateSeo(sectionId)
       if (pathSectionId) window.history.replaceState({}, '', `/#${pathSectionId}`)
       if (sectionId) document.getElementById(sectionId)?.scrollIntoView({ behavior: 'instant', block: 'start' })
     }
