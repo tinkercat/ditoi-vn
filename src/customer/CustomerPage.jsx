@@ -62,7 +62,6 @@ export default function CustomerPage() {
       const hashSectionId = window.location.hash.slice(1)
       const sectionId = pathSectionId || (SECTION_IDS.has(hashSectionId) ? hashSectionId : path === '/' ? 'trang-chu' : null)
 
-      if (pathSectionId) window.history.replaceState({}, '', `/#${pathSectionId}`)
       if (sectionId) document.getElementById(sectionId)?.scrollIntoView({ behavior: 'instant', block: 'start' })
     }
 

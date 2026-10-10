@@ -18,9 +18,8 @@ export default function NavBar({ logoUrl, onBookingOpen }) {
   ]
 
   function nav(path, id) {
-    const destination = path === '/' ? '/' : `/#${id}`
-    if (`${window.location.pathname}${window.location.hash}` !== destination) {
-      window.history.pushState({}, '', destination)
+    if (`${window.location.pathname}${window.location.hash}` !== path) {
+      window.history.pushState({}, '', path)
     }
     scrollTo(id)
     setOpen(false)
